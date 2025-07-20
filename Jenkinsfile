@@ -2,19 +2,21 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds') // optional shortcut if needed elsewhere
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
+        git branch: 'main', url: 'https://github.com/puja-rathi/BSafeProject.git'
       }
     }
 
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t my-flask-app .'
+        script {
+          sh 'docker build -t my-flask-app .'
+        }
       }
     }
 
@@ -32,16 +34,31 @@ pipeline {
 
     stage('Deploy Container') {
       steps {
-        sh 'docker run -d -p 5000:5000 --name flask-container my-flask-app'
+        script {
+          // Optional: remove old container if it exists
+          sh 'docker rm -f flask-container || true'
+
+          // Run the new container
+          withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh """
+              docker pull $USERNAME/my-flask-app:latest
+              docker run -d -p 5000:5000 --name flask-container $USERNAME/my-flask-app:latest
+            """
+          }
+        }
       }
     }
 
     stage('Test') {
       steps {
-        sh 'curl http://localhost:5000 || exit 1'
+        script {
+          sh 'sleep 5' // 🔄 give app time to start
+          sh 'curl -f http://localhost:5000 || exit 1'
+        }
       }
     }
 
+    // Optional cleanup stage
     // stage('Clean Up') {
     //   steps {
     //     sh 'docker stop flask-container && docker rm flask-container'
