@@ -42,10 +42,10 @@ pipeline {
       }
     }
 
-    stage('Clean Up') {
-      steps {
-        sh 'docker stop flask-container && docker rm flask-container'
-      }
-    }
+    // stage('Clean Up') {
+    //   steps {
+    //     sh 'docker stop flask-container && docker rm flask-container'
+    //   }
+    // }
   }
 }
