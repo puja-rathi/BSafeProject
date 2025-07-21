@@ -25,16 +25,21 @@ pipeline {
 
     stage('Run Automated Tests') {
       steps {
-        sh 'pip install -r requirements.txt'
-        sh 'pytest --junitxml=report.xml'
+        sh '''
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pytest tests/ --junitxml=report.xml
+        '''
+      }
     }
-  }
 
     stage('Publish Test Report') {
       steps {
         junit 'report.xml'
+      }
     }
-  }
 
     stage('Push to Docker Hub') {
       steps {
