@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/puja-rathi/BSafeProject.git'
+        git branch: 'dev', url: 'https://github.com/puja-rathi/BSafeProject.git'
       }
     }
 
@@ -19,6 +19,22 @@ pipeline {
         }
       }
     }
+
+
+    //automated tests on created build
+
+    stage('Run Automated Tests') {
+      steps {
+        sh 'pip install -r requirements.txt'
+        sh 'pytest --junitxml=report.xml'
+    }
+  }
+
+    stage('Publish Test Report') {
+      steps {
+        junit 'report.xml'
+    }
+  }
 
     stage('Push to Docker Hub') {
       steps {
@@ -48,6 +64,9 @@ pipeline {
         }
       }
     }
+ 
+
+
 
     stage('Test') {
       steps {
