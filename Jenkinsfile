@@ -28,10 +28,10 @@ pipeline {
         sh '''
           pip install --upgrade pip --break-system-packages
           pip install -r requirements.txt --break-system-packages
-          pytest tests/ --junitxml=report.xml
+          ~/.local/bin/pytest tests/ --junitxml=report.xml
         '''
-      }
     }
+  }
 
     stage('Publish Test Report') {
       steps {
