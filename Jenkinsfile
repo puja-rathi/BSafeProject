@@ -3,6 +3,9 @@ pipeline {
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds') //comment
+    SLACK_CHANNEL = '#slackforbsafe'                // Replace with your Slack channel name
+    SLACK_CREDENTIAL_ID = 'slack_notification'          // Replace with your Jenkins Slack credential ID
+
   }
 
   stages {
@@ -87,4 +90,31 @@ pipeline {
     //   }
     // }
   }
+
+post {
+    success {
+      slackSend(
+        channel: "${SLACK_CHANNEL}",
+        color: 'good',
+        message: ":white_check_mark: *SUCCESS* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Build>)",
+        tokenCredentialId: "${SLACK_CREDENTIAL_ID}"
+      )
+    }
+
+    failure {
+      slackSend(
+        channel: "${SLACK_CHANNEL}",
+        color: 'danger',
+        message: ":x: *FAILURE* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Build>)",
+        tokenCredentialId: "${SLACK_CREDENTIAL_ID}"
+      )
+    }
+
+    always {
+      echo 'Pipeline execution completed.'
+    }
+  }
+
+
+
 }
