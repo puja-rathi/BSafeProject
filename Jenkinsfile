@@ -3,8 +3,8 @@ pipeline {
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds') //comment
-    SLACK_CHANNEL = '#slackforbsafe'                // Replace with your Slack channel name
-    SLACK_CREDENTIAL_ID = 'slack_notification'          // Replace with your Jenkins Slack credential ID
+    SLACK_CHANNEL = '#slackforbsafe'                // Slack channel name
+    SLACK_CREDENTIAL_ID = 'slack_notification'          // Jenkins Slack credential ID
 
   }
 
