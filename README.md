@@ -1,4 +1,4 @@
-# BSafeProject Project Implementation
+# B-Safe Project Implementation
 
 A company wanted move their legacy development process to a DevOps process to gain true business value through faster feature releases, better service quality, and cost optimization, they wanted to adopt agility in their build and release process.
 The objective is to implement iterative deployments, continuous innovation, and automated testing through the assistance of the strategy.
